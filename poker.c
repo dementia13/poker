@@ -1,13 +1,7 @@
 /*=============================================================================
 |	Source code:   poker.c
 |	Author:   Sean Quinn
-|	Student ID: 1203714
-|	Assignment:   Program #4 "Poker" 
-|
-|	Course: COP 4338 - Advanced Programming
-|	Section: U04
-|	Instructor: William Feild
-|	Due Date:   Mar 9, 2017
+|	Program: "Poker" 
 |
 |===========================================================================*/
 #ifndef POKER
@@ -46,7 +40,7 @@ Card assign_card(int id){
  * function create_deck(Deck new_deck)
  *
  * Purpose: Generates a deck of cards. This is nothing special- it's just
- * 	a counting loop. Rank and suit to be assigned later by division.
+ * 	a counting loop that calls functions to assign the card values.
  *
  * @param - Deck deck - array of type Card. Elements are populated as
  * 	the array is iterated through. 
@@ -202,7 +196,7 @@ void display_all_hands(int num_hands, Hand allHands[num_hands]){
 }
 			
 /*----------------- display_card ----------------------------------------------
- * function display_card(Card d_card
+ * function display_card(Card d_card)
  *
  * Purpose: Function for display of a e card from the deck. 
  * 	Prints name of rank and suit
@@ -358,12 +352,13 @@ void get_nameofrank(int rank, char r_name[]){
 	}
 }
 
-/*----------------- get_nameofsuit -------------------------------------------
- * function get_nameofsuit
+/*----------------- get_nameofsuit(int, char[])--------------------------------
+ * function get_nameofsuit(int suit, char s_name[])
  *
  * Purpose: retrieves the string value associated with the card suit 
  *
  * @param - int suit - integer value 1-4 
+ *	    char s_name[] - passed a string, returns name of suit by pointer
  *
  * @return - none. Value is returned by pointer manipulation. 
  *
@@ -388,7 +383,7 @@ void get_nameofsuit(int suit, char s_name[]){
 	}
 }
 
-/*----------------- get_most ----------------------------------------------
+/*----------------- get_most(int, *int, *int) ---------------------------------
  * function get_most(int, *int, *int)
  *
  * Purpose: Tracks when highest or second-highest card count changes 
@@ -411,7 +406,7 @@ void get_most(int changed, int *most, int *n_most){
 	return;
 }
 
-/*----------------- get_rank -------------------------------------------------
+/*----------------- get_rank(int) ---------------------------------------------
  * function get_rank(int i_d)
  *
  * Purpose: Returns an int used to represent the rank value of a struct card.
@@ -435,8 +430,8 @@ int get_rank(int i_d){
 	return rank;
 }
 
-/*----------------- get_score -------------------------------------------------
- * function get_score(Hand)
+/*----------------- get_score(Hand) ------------------------------------------
+ * function get_score(Hand aHand)
  *
  * Purpose: Assigns a score to each hand. Score is assigned based on 
  * 	information at website
@@ -462,7 +457,7 @@ int get_rank(int i_d){
  *	prevents an aces-and-twos two-pair from being outranked by a
  *	high-card hand that contains a King, for one example. 
  *
- * @param - Hand - the Hand being scored 
+ * @param - Hand aHand - the Hand being scored 
  *
  * @return int - the score value of the hand 
  *
@@ -577,7 +572,7 @@ long get_score(Hand aHand){
 	return score;
 }
 
-/*----------------- get_suit -------------------------------------------------
+/*----------------- get_suit(int) --------------------------------------------
  * function get_suit(int i_d)
  *
  * Purpose: Returns an int used to represent the suit value of a struct card.
@@ -600,8 +595,8 @@ int get_suit(int i_d){
 		return suit + 1; 
 }
 
-/*----------------- get_Winner ------------------------------------------------
- * function get_Winner 
+/*----------------- get_Winner(int, Hand) -----------------------------------
+ * function get_Winner(int num_hands, Hand allHands[])
  *
  * Purpose: Finds the highest score of the hands 
  *
@@ -625,12 +620,12 @@ int get_Winner(int num_hands, Hand allHands[num_hands]){
 	return winner;
 }
 
-/*----------------- hasFlush -------------------------------------------------
- * function hasFlush(Hand)  
+/*----------------- hasFlush(int) -------------------------------------------
+ * function hasFlush(int has_f)  
  *
  * Purpose: Marks when flush is detected 
  *
- * @param - Hand - the Hand to be tested 
+ * @param - int has_f - number of cards of same suit
  *
  * @return - int - TRUE (0) or FALSE (1) 
  *
@@ -643,8 +638,8 @@ int hasFlush(int has_f){
 	return bool_val; 
 }
 
-/*----------------- hasStraight ------------------------------------------------
- * function hasStraight(int[])  
+/*----------------- hasStraight(int[]) ---------------------------------------
+ * function hasStraight(int sorted[])  
  *
  * Purpose: Tests the hand for presence of a straight.
  * 	Function is passed an array of cards sorted low to high. Their
@@ -679,7 +674,7 @@ int hasStraight(int sorted[]){
 	return TRUE;
 }
 
-/*----------------- isFlush -------------------------------------------------
+/*----------------- isFlush(int, int, int, int, int) ---------------------
  * function isFlush(int, int, int, int, int)  
  *
  * Purpose: Calculates the score of a hand that is a flush. 
