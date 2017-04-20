@@ -1,13 +1,7 @@
 /*=============================================================================
 |	Source code:   poker.c
 |	Author:   Sean Quinn
-|	Student ID: 1203714
-|	Assignment:   Program #4 "Poker" 
-|
-|	Course: COP 4338 - Advanced Programming
-|	Section: U04
-|	Instructor: William Feild
-|	Due Date:   Mar 9, 2017
+|	Program: "Poker" 
 |
 |===========================================================================*/
 #ifndef POKER
@@ -46,9 +40,9 @@ Card assign_card(int id){
  * function create_deck(Deck new_deck)
  *
  * Purpose: Generates a deck of cards. This is nothing special- it's just
- * 	a counting loop. Rank and suit to be assigned later by division.
+ * 	a counting loop that calls functions to assign the card values.
  *
- * @param - Deck deck - array of type Card. Elements are populated as
+ * @param - Deck new_deck - array of type Card. Elements are populated as
  * 	the array is iterated through. 
  *
  * @return Card*- returned as pointer to first array element
@@ -80,7 +74,7 @@ Card* create_deck(Deck new_deck){
 }
 
 /*----------------- dealHands ------------------------------------------------
- * function dealHands(int, Deck, Hand[]) 
+ * function dealHands(int num_hands, Deck shuffled, Hand aHands[]) 
  *
  * Purpose: Distributes cards from a generated deck to a user-specified
  * 	number of players. Each Hand is dealt in a separate function
@@ -142,7 +136,8 @@ Hand* dealHands(int num_hands, Deck shuffled,
 }
 
 /*----------------- deal_one_hand --------------------------------------------
- * function deal_one_hand(int, int, int, Deck, Hand)
+ * function deal_one_hand(int num_hands, int next_card, int hand_offset,
+ *	Deck shuffled, Hand newHand)
  *
  * Purpose: Deals a single Hand. Simulates a deal in round-robin fashion:
  * 	Deals a card from the deck, then skips (number of players -1) ahead
@@ -182,7 +177,7 @@ Hand* deal_one_hand(int num_hands, int next_card,
 }
 
 /*----------------- display_all_hands -----------------------------------------
- * function display_all_hands(int, Hand[])
+ * function display_all_hands(int num_hands, Hand allHands[])
  *
  * Purpose: Prints all hands in the game by calling function
  * 	to display single hand
@@ -202,7 +197,7 @@ void display_all_hands(int num_hands, Hand allHands[num_hands]){
 }
 			
 /*----------------- display_card ----------------------------------------------
- * function display_card(Card d_card
+ * function display_card(Card d_card)
  *
  * Purpose: Function for display of a e card from the deck. 
  * 	Prints name of rank and suit
@@ -223,7 +218,7 @@ void display_card(Card d_card){
  * Purpose: Is passed a pointer to the deck of shuffled cards. Prints the 
  * 	contents of the current (shuffled and possibly dealt from) deck. 
  *
- * @param Card show_deck) - pointer to the first element of an array
+ * @param Card show_deck - pointer to the first element of an array
  * 	representing the deck of cards
  *
  * @return none. Is a print function.
@@ -242,11 +237,11 @@ void display_deck(Deck show_deck){
 }
 
 /*----------------- display_hand ---------------------------------------------
- * function display_hand(Hand)
+ * function display_hand(Hand showHand)
  *
  * Purpose: Displays a single hand from the Deck.
  *
- * @param Hand - Hand to be displayed 
+ * @param Hand showHand- Hand to be displayed 
  *
  * @return none. Is a print function.
 -----------------------------------------------------------------------------*/
@@ -259,6 +254,23 @@ void display_hand(Hand showHand){
 	return;
 }
 
+/*----------------- get_largest ---------------------------------------------
+ * function get_largest(int *h_count, int *n_count, int *t_count, 
+ *	int *f_count, int *l_count, int r_count, int* h_card, int* n_card,
+ *	int* t_card, int* f_card, int* l_card)
+ *
+ * Purpose: Detects how many times each rank appears in a hand of cards.
+ *	Sorts the cards in decreasing prevalence by manipulating pointers.
+ *
+ * @param int *h_count through *l_count - Number of times a rank is counted, 
+ *	highest to lowest. Highest possible value is 4 (four of a kind). 
+ *	Often, all 5 cards will have value 1. 
+ *	The values *h_card through *f_card are the cards in decreasing rank
+ *	value. These are passed to the function so that when the cards are 
+ *	reordered, the rank value can be kept in sync.
+ *
+ * @return int r_count - rank count, the most frequently occurring rank
+-----------------------------------------------------------------------------*/
 int get_largest(int *h_count, int *n_count, int *t_count, int *f_count,
 		int *l_count, int r_count, int* h_card, int* n_card,
 			int* t_card, int* f_card, int* l_card){
@@ -305,7 +317,6 @@ int get_largest(int *h_count, int *n_count, int *t_count, int *f_count,
  *	is available to the calling function.
  *
  * @param int(rank) - rank as determined by the get_rank function
- *
  * @param char r_name[] - array of type char. Gets assigned the string
  * 	name of the card's rank. 
  *
@@ -358,12 +369,13 @@ void get_nameofrank(int rank, char r_name[]){
 	}
 }
 
-/*----------------- get_nameofsuit -------------------------------------------
- * function get_nameofsuit
+/*----------------- get_nameofsuit(int, char[])--------------------------------
+ * function get_nameofsuit(int suit, char s_name[])
  *
  * Purpose: retrieves the string value associated with the card suit 
  *
  * @param - int suit - integer value 1-4 
+ *	    char s_name[] - passed a string, returns name of suit by pointer
  *
  * @return - none. Value is returned by pointer manipulation. 
  *
@@ -388,7 +400,7 @@ void get_nameofsuit(int suit, char s_name[]){
 	}
 }
 
-/*----------------- get_most ----------------------------------------------
+/*----------------- get_most(int, *int, *int) ---------------------------------
  * function get_most(int, *int, *int)
  *
  * Purpose: Tracks when highest or second-highest card count changes 
@@ -411,7 +423,7 @@ void get_most(int changed, int *most, int *n_most){
 	return;
 }
 
-/*----------------- get_rank -------------------------------------------------
+/*----------------- get_rank(int) ---------------------------------------------
  * function get_rank(int i_d)
  *
  * Purpose: Returns an int used to represent the rank value of a struct card.
@@ -435,8 +447,8 @@ int get_rank(int i_d){
 	return rank;
 }
 
-/*----------------- get_score -------------------------------------------------
- * function get_score(Hand)
+/*----------------- get_score(Hand) ------------------------------------------
+ * function get_score(Hand aHand)
  *
  * Purpose: Assigns a score to each hand. Score is assigned based on 
  * 	information at website
@@ -462,7 +474,7 @@ int get_rank(int i_d){
  *	prevents an aces-and-twos two-pair from being outranked by a
  *	high-card hand that contains a King, for one example. 
  *
- * @param - Hand - the Hand being scored 
+ * @param - Hand aHand - the Hand being scored 
  *
  * @return int - the score value of the hand 
  *
@@ -577,7 +589,7 @@ long get_score(Hand aHand){
 	return score;
 }
 
-/*----------------- get_suit -------------------------------------------------
+/*----------------- get_suit(int) --------------------------------------------
  * function get_suit(int i_d)
  *
  * Purpose: Returns an int used to represent the suit value of a struct card.
@@ -600,8 +612,8 @@ int get_suit(int i_d){
 		return suit + 1; 
 }
 
-/*----------------- get_Winner ------------------------------------------------
- * function get_Winner 
+/*----------------- get_Winner(int, Hand) -----------------------------------
+ * function get_Winner(int num_hands, Hand allHands[])
  *
  * Purpose: Finds the highest score of the hands 
  *
@@ -625,12 +637,12 @@ int get_Winner(int num_hands, Hand allHands[num_hands]){
 	return winner;
 }
 
-/*----------------- hasFlush -------------------------------------------------
- * function hasFlush(Hand)  
+/*----------------- hasFlush(int) -------------------------------------------
+ * function hasFlush(int has_f)  
  *
  * Purpose: Marks when flush is detected 
  *
- * @param - Hand - the Hand to be tested 
+ * @param - int has_f - number of cards of same suit
  *
  * @return - int - TRUE (0) or FALSE (1) 
  *
@@ -643,8 +655,8 @@ int hasFlush(int has_f){
 	return bool_val; 
 }
 
-/*----------------- hasStraight ------------------------------------------------
- * function hasStraight(int[])  
+/*----------------- hasStraight(int[]) ---------------------------------------
+ * function hasStraight(int sorted[])  
  *
  * Purpose: Tests the hand for presence of a straight.
  * 	Function is passed an array of cards sorted low to high. Their
@@ -679,7 +691,7 @@ int hasStraight(int sorted[]){
 	return TRUE;
 }
 
-/*----------------- isFlush -------------------------------------------------
+/*----------------- isFlush(int, int, int, int, int) ---------------------
  * function isFlush(int, int, int, int, int)  
  *
  * Purpose: Calculates the score of a hand that is a flush. 
@@ -703,7 +715,7 @@ long isFlush(int high_card, int next_card, int third_card, int fourth_card,
 }
 
 /*----------------- isFourKind ------------------------------------------------
- * function isFourKind(int, int)  
+ * function isFourKind(int high, int low)  
  *
  * Purpose: Calculates the score of a four-of-a-kind hand. Follows scoring
  * 	pattern of lower-scoring hands.
@@ -731,7 +743,7 @@ long isFourKind(int high, int low){
 }
 
 /*----------------- isFullHouse ----------------------------------------------
- * function isFullHouse(int, int)  
+ * function isFullHouse(int high_card, int low_card)  
  *
  * Purpose: Calculates score of a hand containing a full house. Pattern similar
  * 	to those of lower-valued hands.
@@ -759,7 +771,7 @@ long isFullHouse(int high_card, int low_card){
 }
 
 /*----------------- isHighCard ----------------------------------------------
- * function isHighCard(Hand)  
+ * function isHighCard(int, int, int, int, int)  
  *
  * Purpose:  
  *	Scoring: Every card in the hand is a potential tiebreaker, so they 
@@ -796,7 +808,7 @@ long isHighCard(int high_card, int next_card, int third_card,
 }
 
 /*----------------- isPair ----------------------------------------------
- * function isPair(Hand)  
+ * function isPair(int, int, int, int)  
  *
  * Purpose: Calculates the score of a hand identified to contain one pair.
  * 	Lowest possible score is higher than highest possible score of a 
@@ -872,7 +884,7 @@ long isStraightFlush(int low_card){
 }
 
 /*----------------- isThreeKind ----------------------------------------------
- * function isThreeKind(Hand)  
+ * function isThreeKind(int, int, int)  
  *
  * Purpose: returns the score of a hand containing a three-of-a-kind 
  *
@@ -900,7 +912,7 @@ long isThreeKind(int h_card, int n_card, int l_card){
 }
 
 /*----------------- isTwoPair ----------------------------------------------
- * function isTwoPair(Hand)  
+ * function isTwoPair(int, int, int)  
  *
  * Purpose: calculates the score of a hand with two pairs.
  * 	    See isHighCard and isPair for details on the scoring.	 
@@ -964,11 +976,15 @@ Card* shuffle_deck(Deck o_deck){
 }
 
 /*----------------- sort_hand ------------------------------------------------
- * function sort_hand(Card[]) 
+ * function sort_hand(int, Card[], int*, int*, int*, int*, int*, int*) 
  *
  * Purpose: Sorts the cards in order. Rearranges them by pointer passing. 
  *
- * @param - Card[] hnd - the hand to be ordered 
+ * @param - Card[] hand - the hand to be ordered 
+ *	int sorted[] - Cards in sorted order. Returns pointer to this array
+ *	int* - holds the value of the number of times each card appears
+ *	int* - suit_count - counts number of times a suit appears,
+ *		detects a flush
  *
  * @return - *int - returns pointer to the first element of the reordered array
  * 	of Cards 
@@ -1235,7 +1251,7 @@ int* sort_hand(int sorted[], Card hand[], int *high_count,
 	
 
 /*----------------- validate -------------------------------------------------
- * function validate(int, int) 
+ * function validate(int num_hands, int cph) 
  *
  * Purpose: Verifies that user input is within proper boundaries:
  * 	- the number of players must be between 1-7. Values outside this range 
@@ -1265,7 +1281,7 @@ int validate(int num_hands, int cph){
 }
 
 /*----------------- validate_num_args ------------------------------------------
- * function validate_num_args(int)
+ * function validate_num_args(int num_args)
  *
  * Purpose: Verifies that user-input number of arguments is correct  
  *
